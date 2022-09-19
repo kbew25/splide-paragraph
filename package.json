@@ -1,0 +1,33 @@
+{
+  "name": "splide_paragraph",
+  "version": "1.0.0",
+  "description": "Build and lint .es6.js using core standards",
+  "license": "ISC",
+  "author": {
+    "name": "Kirsty Bewley",
+    "url" : "https://github.com/kbew25"
+  },
+  "scripts": {
+    "//1": "npm run lint:js",
+    "lint:js": "NODE_PATH=$NODE_PATH:$PROJECT_ROOT/web/core/node_modules node $PROJECT_ROOT/web/core/node_modules/eslint/bin/eslint.js --ext .es6.js --config $PROJECT_ROOT/web/core/.eslintrc.json .",
+    "//2": "npm run build:js",
+    "build:js": "$PROJECT_ROOT/web/core/node_modules/.bin/cross-env BABEL_ENV=legacy NODE_PATH=$NODE_PATH:$PROJECT_ROOT/web/core/node_modules node $PROJECT_ROOT/web/core/scripts/js/babel-es6-build.js",
+    "//3": "npm run serve:js",
+    "serve:js": "npm run lint:js && npm run build:js"
+  },
+  "prettier": "../../../core/.prettierrc.json",
+  "babel": {
+    "env": {
+      "legacy": {
+        "presets": [
+          [
+            "@babel/env",
+            {
+              "modules": false
+            }
+          ]
+        ]
+      }
+    }
+  }
+}

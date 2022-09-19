@@ -1,0 +1,42 @@
+splide_paragraph:
+  js:
+    js/carousel.es6.js: {}
+  dependencies:
+    - core/jquery
+    - core/Drupal
+    - core/drupalSettings
+    - core/once
+    - splide_paragraph/inv_class_carousel
+
+inv_class_carousel:
+  js:
+    js/carousel.class.es6.js: {}
+  dependencies:
+    - core/jquery
+    - core/Drupal
+    - splide_paragraph/splide
+
+inv_slider:
+  js:
+    js/slider.es6.js: {}
+  dependencies:
+    - core/jquery
+    - core/Drupal
+    - core/drupalSettings
+    - core/once
+    - splide_paragraph/inv_class_slider
+
+inv_class_slider:
+  js:
+    js/slider.class.es6.js: {}
+  dependencies:
+    - core/jquery
+    - core/Drupal
+    - splide_paragraph/splide
+
+splide:
+  css:
+    theme:
+      vendor/splidejs/splide.min.css: { minified: true }
+  js:
+    vendor/splidejs/splide.min.js: { minified: true }

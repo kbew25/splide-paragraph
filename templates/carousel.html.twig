@@ -1,0 +1,83 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a carousel.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - slides: Carousel slide entity.
+ *
+ * @see template_preprocess_carousel()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if slides|length > 1 %}
+  <section{{ attributes.addClass('carousel') }} aria-labelledby="carousel__heading" data-carousel="{{ type }}">
+
+    {% block title %}
+      {% if title %}
+        <div class="carousel__title">
+          <h2 id="carousel__heading">{{ title }}</h2>
+        </div>
+      {% else %}
+        <h2 id="carousel__heading" class="visually-hidden">{{ 'Carousel'|t }}</h2>
+      {% endif %}
+    {% endblock title %}
+
+    {% block description %}
+      <p class="visually-hidden">{% trans %}This is a carousel with rotating slides. Use the previous and next buttons to navigate.{% endtrans %}</p>
+    {% endblock description %}
+
+    <div class="carousel__wrapper">
+      {% block main %}
+        <div class="carousel__main">
+          <div class="splide__track">
+            <ul class="carousel__slides splide__list">
+              {% for slide in slides %}
+                <li class="splide__slide" data-slide="{{ loop.index }}">
+                  {{ slide.content }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endblock main %}
+
+      {% block controls %}
+        <ul class="carousel__controls {{ control_type == 'focus' ? 'visually-hidden' }}" data-controls-type="{{ control_type }}">
+          <li>
+            <button type="button" class="carousel__controls__button carousel__controls__button--previous is-control">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="4 0 40 40" width="40" height="40" class="icon icon--angle-left" aria-hidden="true"><path stroke="currentColor" style="transform: rotate(180deg) translate(-100%, -100%);" d="m13.5 7.01 13 13m-13 13 13-13"></path></svg>
+              <span class="visually-hidden">{{ 'Previous slide'|t }}</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="carousel__controls__button carousel__controls__button--next is-control">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 40 40" width="40" height="40" class="icon icon--angle-right" aria-hidden="true"><path stroke="currentColor" d="m13.5 7.01 13 13m-13 13 13-13"></path></svg>
+              <span class="visually-hidden">{{ 'Next slide'|t }}</span>
+            </button>
+          </li>
+        </ul>
+      {% endblock controls %}
+
+      {% block nav %}
+        {% if nav_type != 'none' and type != 'slider' %}
+          <div class="carousel__nav" aria-label="{{ 'Carousel navigation'|t }}">
+            <div class="splide__track">
+              <ul class="carousel__nav-list splide__list">
+              {% for slide in slides %}
+                <li class="carousel__nav__item splide__slide" data-slide="{{ loop.index }}" style="{{ nav_type == 'thumbnails' and slide.thumbnail ? 'background-image: url(' ~ slide.thumbnail ~ ');' }}">
+                  <span class="visually-hidden">{{ 'Slide'|t }}</span> <span class="{{ nav_type == 'thumbnails' ? 'visually-hidden' }}">{{ loop.index }}</span>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+      {% endblock nav %}
+    </div>
+  </section>
+{% else %}
+  {{ slide.content }}
+{% endif %}

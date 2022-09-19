@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a carousel slider.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - slides: Carousel slide entity.
+ *
+ * @see template_preprocess_carousel()
+ *
+ * @ingroup themeable
+ */
+#}
+{% extends "carousel.html.twig" %}
+
+{% block description %}
+  <p class="visually-hidden">{% trans %}This is a carousel with rotating slides. Use the navigation to navigate the slides.{% endtrans %} {{ pause ? 'The carousel is autoplaying. Use the pause button to stop.'|t }}</p>
+
+  {% if pause %}
+    <button class="slider-pause" type="button">{{ 'Pause'|t }}</button>
+  {% endif %}
+{% endblock description %}
+
+{% block controls %}{% endblock controls %}

@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for splide_paragraph module.
+ */
+
+use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\Database\Query\AlterableInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function splide_paragraph_theme($existing, $type, $theme, $path) {
+  return [
+    'carousel' => [
+      'render element' => 'element',
+      'base hook' => 'field',
+    ],
+    'slider' => [
+      'render element' => 'element',
+      'base hook' => 'carousel',
+    ],
+    'carousel_slide' => [
+      'render element' => 'elements',
+      'base hook' => 'paragraph',
+    ],
+  ];
+}
+
+/**
+ * Implements template_preprocess_HOOK().
+ */
+function template_preprocess_carousel(&$variables) {
+  $entity_manager = \Drupal::entityTypeManager();
+  $image_field = $variables['element']['#image_field'];
+
+  // Set template vars.
+  $variables['slides'] = [];
+  $variables['type'] = $variables['element']['#theme'];
+  $variables['nav_type'] = $variables['element']['#nav_type'];
+  $variables['control_type'] = $variables['element']['#control_type'];
+  $variables['pause'] = $variables['element']['#settings']['autoplay'];
+
+  // Attach JS and settings.
+  $variables['#attached']['library'][] = 'splide_paragraph/inv_class_' . $variables['type'];
+  $variables['#attached']['drupalSettings']['splide_paragraph']['carouselSettings'] = $variables['element']['#settings'];
+  $variables['#attached']['drupalSettings']['splide_paragraph']['controlsType'] = $variables['element']['#control_type'];
+
+  // If not attached manually.
+  $override = $variables['element']['#override'];
+  if (!$override) {
+    $variables['#attached']['library'][] = 'splide_paragraph/inv_' . $variables['type'];
+  }
+
+  // TODO: Add title field.
+  // $variables['title'] = $paragraph->hasField('field_title') ?? $paragraph->get('field_title')->value;
+
+  // Set slide content.
+  foreach ($variables['items'] as $key => $item) {
+    $gallery_item = $item['content'];
+    $variables['slides'][$key]['content'] = $gallery_item;
+
+    // Create thumbnails.
+    if ($variables['nav_type'] === 'thumbnails') {
+      $slide = $gallery_item['#paragraph'];
+      if ($slide->hasField($image_field)) {
+        /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $field_media */
+        $field_media = $slide->get($image_field);
+
+        // Media image for thumbnails.
+        // TODO: Add image field option.
+        $media_entity = $field_media->entity;
+        $fid = $media_entity->field_media_image->target_id;
+        /** @var \Drupal\file\Entity\File $file */
+        $file = $entity_manager->getStorage('file')->load($fid);
+        $thumbnail = ImageStyle::load('carousel_thumbnail')->buildUrl($file->getFileUri());
+
+        // Set fields.
+        $variables['slides'][$key]['thumbnail'] = $thumbnail;
+      }
+    }
+  }
+}

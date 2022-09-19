@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a carousel slide.
+ *
+ * Available variables:
+ * - content: Entity content.
+ * - attributes: HTML attributes for the containing element.
+ *
+ * @see template_preprocess_carousel_slide()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('carousel__slide') }}>
+  {{ content }}
+</div>
